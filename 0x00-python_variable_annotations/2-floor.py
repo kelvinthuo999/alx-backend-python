@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
+"""Function to round off a float"""
+
+
 import math
-"""
-Function to round off a float
-"""
 
 
 def floor(n: float) -> int:
