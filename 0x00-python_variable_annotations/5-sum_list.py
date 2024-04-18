@@ -5,6 +5,6 @@
 from typing import List, Union
 
 
-def sum_list(input_list: List[float]) -> Union[float, int]:
+def sum_list(input_list: List[float]) -> float:
     """Function to sum floats in a list"""
     return sum(input_list)
