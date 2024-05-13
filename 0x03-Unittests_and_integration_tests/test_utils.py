@@ -1,11 +1,15 @@
+#!/usr/bin/env python3
+""" Module for testing utils """
+
 from parameterized import parameterized
 import unittest
 from unittest.mock import patch
 from utils import (access_nested_map, get_json, memoize)
+import requests
 
 
-class TestAccessNestedMap(unittest.TestCase):
-    """ Test Access Nested Map """
+class TestUtils(unittest.TestCase):
+    """ Class for Testing Utils """
 
     @parameterized.expand([
         ({"a": 1}, ("a",), 1),
@@ -21,36 +25,26 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": 1}, ("a", "b"), 'b')
     ])
     def test_access_nested_map_exception(self, nested_map, path, expected):
-        """ Test KeyError handling in access_nested_map """
+        """ Test access_nested_map exceptions """
         with self.assertRaises(KeyError) as e:
             access_nested_map(nested_map, path)
         self.assertEqual(f"KeyError('{expected}')", repr(e.exception))
-
-
-class TestGetJson(unittest.TestCase):
-    """ Test Get Json """
 
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False})
     ])
     def test_get_json(self, test_url, test_payload):
-        """ Test get_json function """
+        """ Test get_json """
         config = {'return_value.json.return_value': test_payload}
-        patcher = patch('requests.get', **config)
-        mock = patcher.start()
-        self.assertEqual(get_json(test_url), test_payload)
-        mock.assert_called_once()
-        patcher.stop()
-
-
-class TestMemoize(unittest.TestCase):
-    """ Test Memoize """
+        with patch('requests.get', **config) as mock:
+            self.assertEqual(get_json(test_url), test_payload)
+            mock.assert_called_once()
 
     def test_memoize(self):
-        """ Test memoize decorator """
+        """ Test memoize """
         class TestClass:
-            """ Test Class """
+            """ Test Class for wrapping with memoize """
             def a_method(self):
                 return 42
 
