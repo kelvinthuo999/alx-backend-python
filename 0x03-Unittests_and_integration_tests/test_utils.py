@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
-""" Module for testing utils """
+"""
+Test module for utility functions
+"""
 
-from parameterized import parameterized
 import unittest
+import requests
+from parameterized import parameterized
 from unittest.mock import patch
 from utils import (access_nested_map, get_json, memoize)
-import requests
 
 
 class TestAccessNestedMap(unittest.TestCase):
-    """ Class for Testing Access Nested Map """
-
+    """
+    Test case for accessing nested maps
+    """
     @parameterized.expand([
         ({"a": 1}, ("a",), 1),
         ({"a": {"b": 2}}, ("a",), {'b': 2}),
         ({"a": {"b": 2}}, ("a", "b"), 2)
     ])
     def test_access_nested_map(self, nested_map, path, expected):
-        """ Test that the method returns what it is supposed to """
+        """
+        Test accessing nested maps
+        """
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
     @parameterized.expand([
@@ -25,21 +30,26 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": 1}, ("a", "b"), 'b')
     ])
     def test_access_nested_map_exception(self, nested_map, path, expected):
-        """ Test that a KeyError is raised for the respective inputs """
+        """ 
+        Test exception handling for accessing nested maps
+        """
         with self.assertRaises(KeyError) as e:
             access_nested_map(nested_map, path)
         self.assertEqual(f"KeyError('{expected}')", repr(e.exception))
 
 
 class TestGetJson(unittest.TestCase):
-    """ Class for Testing Get Json """
-
+    """
+    Test case for getting JSON data
+    """
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False})
     ])
     def test_get_json(self, test_url, test_payload):
-        """ Test that utils.get_json returns the expected result."""
+        """
+        Test getting JSON data
+        """
         config = {'return_value.json.return_value': test_payload}
         patcher = patch('requests.get', **config)
         mock = patcher.start()
@@ -49,16 +59,18 @@ class TestGetJson(unittest.TestCase):
 
 
 class TestMemoize(unittest.TestCase):
-    """ Class for Testing Memoize """
-
+    """
+    Test case for memoization
+    """
     def test_memoize(self):
-        """ Test that when calling a_property twice, the correct result
-        is returned but a_method is only called once using
-        assert_called_once
+        """
+        Test memoization functionality
         """
 
         class TestClass:
-            """ Test Class for wrapping with memoize """
+            """
+            Test class for memoization
+            """
 
             def a_method(self):
                 return 42
